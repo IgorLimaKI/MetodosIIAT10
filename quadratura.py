@@ -1,6 +1,13 @@
 import math
 import numpy as np
 
+# Valor exato da integral do polinomio
+VALOR_EXATO = 17.8764703
+# Tolerância defina na lista
+TOLERANCIA = 0.000001
+# Quantidade de passos que será incrementado
+INCREMENTO = 1
+
 
 def f(valor):
     interno = math.sin(2 * valor) + 4 * valor ** 2 + 3 * valor
@@ -18,7 +25,7 @@ def doisPontos(xIni, xFim):
     somatorio = w * f(x(a1, xIni, xFim)) + w * f(x(a2, xIni, xFim))
     resultado = ((xFim - xIni) / 2) * somatorio
 
-    print("%1.7f\n" % resultado)
+    return resultado
 
 
 def tresPontos(xIni, xFim):
@@ -33,7 +40,7 @@ def tresPontos(xIni, xFim):
     somatorio = w1 * f(x(a1, xIni, xFim)) + w2 * f(x(a2, xIni, xFim)) + w3 * f(x(a3, xIni, xFim))
     resultado = ((xFim - xIni) / 2) * somatorio
 
-    print("%1.7f\n" % resultado)
+    return resultado
 
 
 def quatroPontos(xIni, xFim):
@@ -51,11 +58,51 @@ def quatroPontos(xIni, xFim):
         x(a4, xIni, xFim))
     resultado = ((xFim - xIni) / 2) * somatorio
 
-    print("%1.7f\n" % resultado)
+    return resultado
 
 
-doisPontos(0, 1)
+def resolver(xIni, xFim, pontos):
+    resultado = 0
+    numeroParticoes = 0
+    while erroRelativo(resultado) > TOLERANCIA:
+        resultado = 0
+        numeroParticoes = numeroParticoes + 1
+        deltax = (xFim - xIni) / numeroParticoes
+        xIniAtual = xIni
+        xFimAtual = xIniAtual + deltax
+        if pontos == 2:
+            for i in range(numeroParticoes):
+                resultado = resultado + doisPontos(xIniAtual, xFimAtual)
+                xIniAtual = xFimAtual
+                xFimAtual = xIniAtual + deltax
+        if pontos == 3:
+            for i in range(numeroParticoes):
+                resultado = resultado + tresPontos(xIniAtual, xFimAtual)
+                xIniAtual = xFimAtual
+                xFimAtual = xIniAtual + deltax
+        if pontos == 4:
+            for i in range(numeroParticoes):
+                resultado = resultado + quatroPontos(xIniAtual, xFimAtual)
+                xIniAtual = xFimAtual
+                xFimAtual = xIniAtual + deltax
 
-tresPontos(0, 1)
+    return resultado, numeroParticoes
 
-quatroPontos(0, 1)
+
+def erroRelativo(aproximado):
+    return abs(aproximado - VALOR_EXATO) / VALOR_EXATO
+
+
+# resolver(0, 1, 1, 4)
+
+def main():
+    for i in range(3):
+        res, ite = resolver(0, 1, i + 2)
+        print(
+            'Total de particoes para formula de {} pontos: {} iteracoes'.format(res, ite))
+        print('************************************************************')
+
+
+if __name__ == '__main__':
+    print('************************** CALCULANDO **************************')
+    main()
