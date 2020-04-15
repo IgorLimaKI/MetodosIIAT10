@@ -93,13 +93,11 @@ def erroRelativo(aproximado):
     return abs(aproximado - VALOR_EXATO) / VALOR_EXATO
 
 
-# resolver(0, 1, 1, 4)
-
 def main():
     for i in range(3):
         res, ite = resolver(0, 1, i + 2)
         print(
-            'Total de particoes para formula de {} pontos: {} iteracoes'.format(res, ite))
+            'Total de iteracoes para formula de {} pontos: {} iteracoes, resultado final {}'.format(i + 2, ite, res))
         print('************************************************************')
 
 
